@@ -34,3 +34,78 @@ export const calculateMA = ({ prices, window }) =>
         return sum / window;
     });
 
+/**
+ * @description RSI(상대강도지수) 계산 함수
+ * @param {Object} param
+ * @param {Array<number>} param.prices 종가 배열
+ * @param {number} param.period 계산 기간 (기본: 14)
+ * @returns {Array<number|null>} RSI 값 배열
+ */
+export const calculateRSI = ({ prices, period = 14 }) => {
+    const rsi = [null]; // 첫 값은 null로 시작
+
+    let gains = 0;
+    let losses = 0;
+
+    // 초기 평균 gain/loss 계산
+    for (let i = 1; i <= period; i++) {
+        const delta = prices[i] - prices[i - 1];
+        if (delta >= 0) gains += delta;
+        else losses -= delta;
+    }
+
+    let avgGain = gains / period;
+    let avgLoss = losses / period;
+
+    rsi.push(100 - (100 / (1 + avgGain / avgLoss)));
+
+    // 이후 RSI 계산 (지수 이동평균 방식)
+    for (let i = period + 1; i < prices.length; i++) {
+        const delta = prices[i] - prices[i - 1];
+        const gain = delta > 0 ? delta : 0;
+        const loss = delta < 0 ? -delta : 0;
+
+        avgGain = (avgGain * (period - 1) + gain) / period;
+        avgLoss = (avgLoss * (period - 1) + loss) / period;
+
+        rsi.push(100 - (100 / (1 + avgGain / avgLoss)));
+    }
+
+    // 부족한 앞 구간은 null로 채움
+    while (rsi.length < prices.length) rsi.unshift(null);
+
+    return rsi;
+};
+
+/**
+ * @description 볼린저 밴드 계산 함수
+ * @param {Object} param
+ * @param {Array<number>} param.prices 종가 배열
+ * @param {number} param.period 기준 이동평균 기간 (기본: 20)
+ * @param {number} param.stdDev 표준편차 배수 (기본: 2)
+ * @returns {Array<Object>} 각 봉마다 { middle, upper, lower } 값 반환
+ */
+export const calculateBollingerBands = ({ prices, period = 20, stdDev = 2 }) => {
+    const bands = [];
+
+    for (let i = 0; i < prices.length; i++) {
+        if (i < period - 1) {
+            bands.push({ middle: null, upper: null, lower: null });
+            continue;
+        }
+
+        const windowPrices = prices.slice(i - period + 1, i + 1);
+        const mean = windowPrices.reduce((a, b) => a + b, 0) / period;
+        const variance = windowPrices.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / period;
+        const std = Math.sqrt(variance);
+
+        bands.push({
+            middle: mean,
+            upper: mean + stdDev * std,
+            lower: mean - stdDev * std,
+        });
+    }
+
+    return bands;
+};
+

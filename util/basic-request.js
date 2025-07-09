@@ -16,7 +16,7 @@ const {
 
 /**
  * @description parameter 없는 방식의 업비트 요청
- * @returns Axios
+ * @returns Axios1
  */
 const upReqWithoutParmeter = (() => {
     const payload = {
