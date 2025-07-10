@@ -4,10 +4,10 @@ import dotenv from "dotenv";
 import crypto from 'crypto'
 import querystring from 'querystring'
 import axios from 'axios'
-import URL from '../util/url-constants.js'
+import { URL } from '../util/url-constants.js'
 
 dotenv.config();
-const { upbit: { BaseURL } } = URL
+const { UPBIT: { BaseURL } } = URL
 
 const {
     SECRET_KEY: secretKey,

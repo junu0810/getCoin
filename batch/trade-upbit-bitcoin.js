@@ -1,11 +1,11 @@
 import schedule from 'node-schedule'
 import { fetchCandleData } from '../util/upbit-controller.js'
-import URL from '../util/url-constants.js'
+import { URL } from '../util/url-constants.js'
 import { calculateMovingAverages } from '../util/calculate-cahrt.js'
 import { upbitWebSocket } from '../util/socket.js'
-import moment from 'moment'
 
-const { upbit: { getCandlesMinutes } } = URL
+
+const { UPBIT: { getCandlesMinutes } } = URL
 
 //2초당 1번씩 실행 
 // const crontab = '*/2 * * * * *'
@@ -14,7 +14,7 @@ const main = () => {
     const volumes = []
     const marketCode = "KRW-ETH"
     const shortWindow = 5
-    
+
     const longWindow = 20
 
     console.log(volumes.length)
