@@ -22,7 +22,7 @@ const tradelog = tradeLogger({ filename })
 
 
 // 볼린저밴드와 RSI지수를 활용한 DOGE코인 거래 
-const crontab = '*/1 * * * * *'
+const crontab = '*/15 * * * * * '
 const main = () => {
     schedule.scheduleJob(crontab, async () => {
 
