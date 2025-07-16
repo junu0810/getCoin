@@ -1,4 +1,5 @@
 import schedule from 'node-schedule'
+import axios from 'axios'
 import { fetchCandleData } from '../util/upbit-controller.js'
 import { URL } from '../util/url-constants.js'
 import { customLogger, tradeLogger } from '../util/logger.js'
@@ -22,7 +23,8 @@ const tradelog = tradeLogger({ filename })
 
 
 // 볼린저밴드와 RSI지수를 활용한 DOGE코인 거래 
-const crontab = '*/15 * * * * * '
+// const crontab = '*/2 * * * * *'
+const crontab = '*/30 * * * * '
 const main = () => {
     schedule.scheduleJob(crontab, async () => {
 
@@ -58,11 +60,18 @@ const main = () => {
             lower,
             close
         })
+
         // 매수 조건:
         // 1) RSI < 30 (과매도)
         // 2) 종가가 하단 밴드 이탈 후 다시 상향돌파 (반등 판단)
         if (rsi < 30 && prevClose < lower && close > lower) {
-
+            await axios.post('http://localhost:3000/send/myself',
+                { message: '📈 매수 신호: RSI 과매도 + 밴드 하단 이탈 후 복귀' },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
             tradelog.info('📈 매수 신호: RSI 과매도 + 밴드 하단 이탈 후 복귀');
         }
 
@@ -70,6 +79,13 @@ const main = () => {
         // 1) RSI > 70 (과매수)
         // 2) 종가가 상단 밴드 돌파
         if (rsi > 70 && close > upper) {
+            await axios.post('http://localhost:3000/send/myself',
+                { message: '📉 매도 신호: RSI 과매수 + 밴드 상단 돌파' },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
             tradelog.info('📉 매도 신호: RSI 과매수 + 밴드 상단 돌파');
         }
 

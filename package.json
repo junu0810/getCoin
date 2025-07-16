@@ -10,7 +10,11 @@
     "start:get-upbit-information": "node --max_old_space_size=8192 ./batch/get-upbit-information.js",
     "start:trade-upbit-bitcoin": "node --max_old_space_size=8192 ./batch/trade-upbit-bitcoin.js",
     "start:trade-upbit-doge": "node --max_old_space_size=8192 ./batch/trade-upbit-doge.js",
-    "deploy:trade-upbit-doge": "pm2 start ./batch/trade-upbit-doge.js --node-args='--max_old_space_size=8192' --name trade-doge"
+    "deploy:trade-upbit-doge": "pm2 start ./batch/trade-upbit-doge.js --node-args='--max_old_space_size=8192' --name trade-doge",
+    "start:kakao-message": "nodemon --max_old_space_size=8192 ./message/kakao-message.js",
+    "deploy:kako-message": "pm2 start ./message/kakao-message.js --node-args='--max_old_space_size=8192' --name trade-doge",
+    "start:refresh-kakao-token": "nodemon --max_old_space_size=8192 ./batch/refresh-kakao-token.js",
+    "deploy:refresh-kakao-token": "pm2 start ./batch/refresh-kakao-token.js --node-args='--max_old_space_size=8192' --name trade-doge"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +27,7 @@
     "moment": "^2.30.1",
     "node-schedule": "^2.1.1",
     "nodemon": "^3.1.9",
+    "qs": "^6.14.0",
     "querystring": "^0.2.1",
     "uuid": "^11.0.3",
     "uuidv4": "^6.2.13",
