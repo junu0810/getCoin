@@ -3,8 +3,8 @@ import axios from 'axios'
 
 
 
-const crontab = '*/2 * * * * *'
-// const crontab = '0 */3 * * *'
+// const crontab = '*/2 * * * * *'
+const crontab = '0 */3 * * *'
 const main = () => {
     schedule.scheduleJob(crontab, async () => {
         console.log('refresh Token :: ')
